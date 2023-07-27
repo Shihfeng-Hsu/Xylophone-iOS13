@@ -7,15 +7,48 @@
 //
 
 import UIKit
+import AVFoundation
+var audioPlayer: AVAudioPlayer?
 
 class ViewController: UIViewController {
-
+    
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
     }
-
-
     
+    @IBAction func keyPressed(_ sender: UIButton) {
+        //Get the button title.
+        let soundTitle = sender.title(for: .normal)
 
+        playSound(resource:soundTitle!)
+        
+       
+    }
+    
+    
+    //player function and switcher
+    func playSound(resource: String){
+        
+        //The Sounds folder in the XCODE is NOT a folder, it's a group.
+        //so all the sounds file are in the main folder.
+        guard let url = Bundle.main.url(forResource: resource, withExtension: "wav")else{return}
+        
+        do{
+            try AVAudioSession.sharedInstance().setCategory(.playback,mode:.default)
+            try AVAudioSession.sharedInstance().setActive(true)
+            
+            audioPlayer = try AVAudioPlayer(contentsOf: url, fileTypeHint: AVFileType.wav.rawValue)
+            
+            guard let player = audioPlayer else {return}
+            
+            player.play()
+            
+        }catch let error {
+            print(error.localizedDescription)
+        }
+        
+    }
+    
 }
-
